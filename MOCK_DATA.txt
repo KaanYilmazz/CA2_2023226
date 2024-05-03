@@ -1,0 +1,71 @@
+1,Dublin,1990-05-10,Dublin,Ireland
+3,Kaan Yilmaz, 1996-01-04,8,8,Turkey,2023226,120,48
+3,Erik van Helvert, 2000-12-12,7,7,Netherlands,2023100,111,77
+3,James Freeman, 2001-06-07,11,5,Ireland,2024011,50,12
+3,Kevin Smith,1993-07-15,10,4,England,1234567,110,75
+3,Ken McBarbie,1993-07-15,10,4,Ireland,1334467,110,75
+3,Kat Johnston,1988-04-20,7,6,Ireland,2345678,135,90
+3,Andreas Mueller,1992-03-25,6,3,Germany,5678901,150,80
+5,Mickey Rain,1
+5,Jack Baker,2
+5,Corey Doyle,3
+5,Sutton Regan,4
+5,Bishop Seward,5
+5,Marshal Landen,6
+1,Cork,1991-02-11,Cork,Ireland
+3,Connor O`Healy, 1986-01-04,1,3,Ireland,2021216,420,148
+3,Jack McManaman, 2001-12-11,7,5,Ireland,2022200,211,57
+3,Cole Plumber, 2003-06-07,11,6,England,2024011,43,18
+3,Luis Hernandez,1990-12-10,9,10,Mexico,3456789,105,60
+3,Sofian Martinez,1995-09-05,11,8,Spain,4567890,95,55
+3,Ayumi Tanaka,1994-11-12,14,9,Japan,6789012,125,70
+3,Diego Silva,1987-08-30,5,2,Brazil,7890123,140,85
+3,Chang Li,1991-06-18,12,11,China,8901234,100,50
+5,Robin Kevan,1
+5,Senan Kasey,2
+5,Jeffry Gallagher,3
+5,Redmund Seachlann,4
+5,Kennedy Dubhán,5
+5,Shea Finnian,6
+1,Bohemians,1999-01-01,Dublin,Ireland
+3,Phlip Smith, 1997-06-24,21,1,Ireland,2021666,311,8
+3,Christopher Coleman, 2002-12-11,7,2,Ireland,2022401,200,10
+3,Demian Duff, 1988-06-17,10,9,Northen Ireland,2000011,612,370
+3,Oleg Petrova,1996-02-28,13,12,Ukreine,9012345,80,40
+3,Pablo Gonzalez,1993-10-22,3,1,Argentina,0123456,115,65
+3,Jota Costa,1989-05-14,8,5,Portugal,1234567,130,70
+3,Adrian Smith,1990-01-08,7,4,Ireland,2345678,125,75
+3,Clian McMurphy,1994-04-01,11,10,Ireland,3456789,105,55
+3,Adrian Fernandez,1992-12-20,9,7,Spain,4567890,110,60
+3,Klaus Schmidt,1988-09-10,6,3,Germany,5678901,145,80
+5,Brady Louis,1
+5,Walsh Conor,2
+5,Wogan Andrew,3
+5,O'Sullivan Cory,4
+5,Cailloce Killian,5
+5,Mohan Tom,6
+2,Los Angeles u19,1925-01-01,SF,1
+4,Erik Rodriguez, 2004-03-03,10,10,Honduras,1
+4,Alex Martin, 2006-03-03,5,3,USA,2
+4,Jefferson Smith,1993-07-11,10,4,USA,2
+4,Michael Helpert,1988-04-10,7,6,USA,3
+4,Rafael Hernandez,1990-11-10,9,10,USA,1
+4,Ignacio Martinez,1995-01-05,11,8,Mexico,2
+5,Harriel Nathan,1
+5,Tolkin John,2
+5,Wiley Caleb,3
+5,Bassett Cole,4
+5,Edelman Daniel,5
+5,McGlynn Jack,6
+2,Miami u19,1923-02-02,FL,2
+4,Tom Nolan,1992-03-25,6,3,USA,3
+4,Tommy McLean,1987-02-30,5,2,USA,1
+4,Leonard Pattison,1996-02-21,13,12,USA,2
+4,Patrick Schrute,1989-01-14,8,5,Germany,3
+4,Alan Smith,1990-01-18,7,4,USA,1
+5,McGuire Duncan,1
+5,Peterri Koponnen,2
+5,Lewis Ham,3
+5,Taylor Smith,4
+5,Brandon Brown,5
+5,Walter Grey,6
