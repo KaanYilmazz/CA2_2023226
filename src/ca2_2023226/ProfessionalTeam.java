@@ -17,7 +17,7 @@ public class ProfessionalTeam extends Team {
     public ArrayList<ProfessionalPlayer> players;
 
     public ProfessionalTeam() {
-        players = new ArrayList<ProfessionalPlayer>();
-        staffList = new ArrayList<Staff>();
+        players = new ArrayList<>();
+        staffList = new ArrayList<>();
     }
 }

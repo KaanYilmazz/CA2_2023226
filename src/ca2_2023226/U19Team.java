@@ -16,7 +16,7 @@ public class U19Team {
     public ArrayList<U19Player> players; 
     public ArrayList<Staff> staffList;
     public U19Team() {
-    players = new ArrayList<U19Player>();
-    staffList = new ArrayList<Staff>();
+    players = new ArrayList<>();
+    staffList = new ArrayList<>();
     }
 }

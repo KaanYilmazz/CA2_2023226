@@ -15,4 +15,5 @@ public abstract class Player {
     public Date birthday;
     public int jerseyNumber;
     public PositionEnum position;
+    public String Nationality;
 }
