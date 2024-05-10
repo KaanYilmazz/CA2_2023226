@@ -11,6 +11,18 @@ package ca2_2023226;
 public enum ConditionEnum {
     bad,
     okay,
-    good,
+    good;
+    //I couldnt find a basic way to bring enum values by giving a number. So I wrote a method for every enum
+    public static ConditionEnum ConditionGetter(int select) {  
+        switch (select) {
+            case 1:
+                return bad;
+            case 2:
+                return okay;
+            case 3:
+                return good;
+        }
+           return okay;
+    }
 }
 

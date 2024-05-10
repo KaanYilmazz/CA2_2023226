@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @author kaany
  */
 
-public class U19Team {
+public class U19Team extends Team {
     public ConditionEnum facilities;
     public ArrayList<U19Player> players; 
     public ArrayList<Staff> staffList;

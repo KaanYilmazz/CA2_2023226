@@ -11,5 +11,17 @@ package ca2_2023226;
 public enum ContractEnum {
     trial,
     young,
-    promising
+    promising;
+        //I couldnt find a basic way to bring enum values by giving a number. So I wrote a method for every enum
+    public static ContractEnum ContractTypeGetter(int select) {  
+        switch (select) {
+            case 1:
+                return trial;
+            case 2:
+                return young;
+            case 3:
+                return promising;
+        }
+           return young;
+    }
 }

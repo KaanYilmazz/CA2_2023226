@@ -14,5 +14,25 @@ public enum JobEnum {
     Trainer,
     Physio,
     Analist,
-    Scout
+    Scout;
+    //I couldnt find a basic way to bring enum values by giving a number. So I wrote a method for every enum
+    public static JobEnum Jobgetter(int select) {
+        switch (select) {
+            case 1:
+                return Head_Coach;
+            case 2:
+                return Assistan_Coach;
+            case 3:
+                return Trainer;
+            case 4:
+                return Physio;
+            case 5:
+                return Analist;
+            case 6:
+                return Scout;
+            default:
+                break;
+        }
+           return Trainer;
+    }
 }
