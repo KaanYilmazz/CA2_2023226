@@ -11,8 +11,8 @@ import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
  * @author kaany
  */
 enum MenuChoice {
+    LIST_ALL,
     SORT_PLAYERS,
     SORT_TEAMS,
     SORT_STAFF,
@@ -49,28 +50,33 @@ public class CA2_2023226 {
      * @param args the command line arguments
      * @throws java.io.IOException
      */
+    static AllTeams _allTeams;
+    static ArrayList<String> randomNames;
+
     public static void main(String[] args) throws IOException {
 
         Scanner _scanner = new Scanner(System.in);
         System.out.println("Enter the File name .txt extention: ");
         String mockFile = _scanner.next();
-        AllTeams _allTeams = FillWithMockData(mockFile);
+        _allTeams = FillWithMockData(mockFile);
         String userInputToSearch;
+        randomNames = fillRandomNames();
 
         try ( Scanner scanner = new Scanner(System.in)) {
             MenuChoice choice;
             do {
                 // Print the menu
-                System.out.println("***** WELCOME TO RUGBY DATABASE *****");
-                System.out.println("1. Sort Players");
-                System.out.println("2. Sort Teams");
-                System.out.println("3. Sort Staff");
-                System.out.println("4. Search Players by Name");
-                System.out.println("5. Search Teams by Name");
-                System.out.println("6. Search Staff by Name");
-                System.out.println("7. Add Player");
-                System.out.println("8. Generate Random Player");
-                System.out.println("9. Exit");
+                System.out.println("\n***** WELCOME TO RUGBY DATABASE *****");
+                System.out.println("1. List All");
+                System.out.println("2. Sort Players");
+                System.out.println("3. Sort Teams");
+                System.out.println("4. Sort Staff");
+                System.out.println("5. Search Players by Name");
+                System.out.println("6. Search Teams by Name");
+                System.out.println("7. Search Staff by Name");
+                System.out.println("8. Add Player");
+                System.out.println("9. Generate Random Player");
+                System.out.println("10. Exit");
 
                 // Take user input
                 BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
@@ -83,6 +89,9 @@ public class CA2_2023226 {
                 List<Staff> allStaff = CombineStaff(_allTeams.ProTeams, _allTeams.u19Teams);
                 // Perform the selected operation
                 switch (choice) {
+                    case LIST_ALL:
+                        ListAll(_allTeams);
+                        break;
                     case SORT_PLAYERS:
                         SortPlayers(allProPlayers, u19Players);
                         break;
@@ -108,12 +117,10 @@ public class CA2_2023226 {
                         SearchStaff(userInputToSearch, allStaff);
                         break;
                     case ADD_PLAYER:
-                        System.out.println("Delete contact operation selected.");
-                        // Here would be the code for deleting a contact
+                        AddPlayer();
                         break;
                     case GENERATE_RANDOM_PLAYER:
-                        System.out.println("Delete contact operation selected.");
-                        // Here would be the code for deleting a contact
+                        GenerateRandomPlayer();
                         break;
                     case EXIT:
                         System.out.println("Exiting the program...");
@@ -128,22 +135,24 @@ public class CA2_2023226 {
     private static MenuChoice getMenuChoice(int userInput) {
         switch (userInput) {
             case 1:
-                return MenuChoice.SORT_PLAYERS;
+                return MenuChoice.LIST_ALL;
             case 2:
-                return MenuChoice.SORT_TEAMS;
+                return MenuChoice.SORT_PLAYERS;
             case 3:
-                return MenuChoice.SORT_STAFF;
+                return MenuChoice.SORT_TEAMS;
             case 4:
-                return MenuChoice.SEARCH_PLAYERS_BY_NAME;
+                return MenuChoice.SORT_STAFF;
             case 5:
-                return MenuChoice.SEARCH_TEAMS_BY_NAME;
+                return MenuChoice.SEARCH_PLAYERS_BY_NAME;
             case 6:
-                return MenuChoice.SEARCH_STAFF_BY_NAME;
+                return MenuChoice.SEARCH_TEAMS_BY_NAME;
             case 7:
-                return MenuChoice.ADD_PLAYER;
+                return MenuChoice.SEARCH_STAFF_BY_NAME;
             case 8:
-                return MenuChoice.GENERATE_RANDOM_PLAYER;
+                return MenuChoice.ADD_PLAYER;
             case 9:
+                return MenuChoice.GENERATE_RANDOM_PLAYER;
+            case 10:
                 return MenuChoice.EXIT;
             default:
                 return null;
@@ -445,5 +454,140 @@ public class CA2_2023226 {
         } else {
             System.out.println("Nobody has founded");
         }
+    }
+
+    private static void AddPlayer() throws IOException {
+        Scanner _scanner = new Scanner(System.in);
+        System.out.println("Player`s full name?");
+        String name = _scanner.next();
+        System.out.println("Player`s Nationality");
+        String nationality = _scanner.next();
+        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Age?");
+        int age = Integer.parseInt(input.readLine());
+        System.out.println("Which team does this player play for?");
+        if (age < 19) {
+            U19Player player = new U19Player();
+            player.name = name;
+            player.nationality = nationality;
+            int counter = 1;
+            for (U19Team team : _allTeams.u19Teams) {
+                System.out.println(counter + team.name);
+                counter++;
+            }
+            int teamIndex = Integer.parseInt(input.readLine());
+            _allTeams.u19Teams.get(teamIndex).players.add(player);
+        } else {
+            ProfessionalPlayer player = new ProfessionalPlayer();
+            player.name = name;
+            player.nationality = nationality;
+            int counter = 1;
+            for (ProfessionalTeam team : _allTeams.ProTeams) {
+                System.out.println(counter + team.name);
+                counter++;
+            }
+            int teamIndex = Integer.parseInt(input.readLine());
+            _allTeams.ProTeams.get(teamIndex).players.add(player);
+        }
+        System.out.println(name + " Added Successfully!");
+    }
+
+    private static void ListAll(AllTeams _allTeams) {
+        for (ProfessionalTeam team : _allTeams.ProTeams) {
+            System.out.println("\n#######    " + team.name + "     #######");
+            for (ProfessionalPlayer player : team.players) {
+                System.out.println(player.jerseyNumber + " " + player.name + " " + player.position);
+            }
+            for (Staff staff : team.staffList) {
+                System.out.println(staff.name + " " + staff.job);
+            }
+        }
+        for (U19Team team : _allTeams.u19Teams) {
+            System.out.println("\n#######    " + team.name + "     #######");
+            for (U19Player player : team.players) {
+                System.out.println(player.jerseyNumber + " " + player.name + " " + player.position);
+            }
+            for (Staff staff : team.staffList) {
+                System.out.println(staff.name + " " + staff.job);
+            }
+        }
+    }
+
+    // Function to get a random name from the list
+    private static String getRandomName() {
+        Random random = new Random();
+        int index = random.nextInt(randomNames.size());
+        return randomNames.get(index);
+    }
+
+    private static void GenerateRandomPlayer() throws IOException {
+        String name = getRandomName();
+        String nationality = "Ireland";
+        Random r = new Random();
+        int low = 14;
+        int high = 40;
+        int age = r.nextInt(high - low) + low;
+        low = 1;
+        high = 99;
+        int kitNumber = r.nextInt(high - low) + low;
+
+        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Which team does this player play for?");
+        if (age < 19) {
+            U19Player player = new U19Player();
+            player.name = name;
+            player.nationality = nationality;
+            player.jerseyNumber = kitNumber;
+            int counter = 1;
+            for (U19Team team : _allTeams.u19Teams) {
+                System.out.println(counter + team.name);
+                counter++;
+            }
+            int teamIndex = Integer.parseInt(input.readLine());
+            _allTeams.u19Teams.get(teamIndex - 1).players.add(player);
+        } else {
+            ProfessionalPlayer player = new ProfessionalPlayer();
+            player.name = name;
+            player.nationality = nationality;
+            player.jerseyNumber = kitNumber;
+            int counter = 1;
+            for (ProfessionalTeam team : _allTeams.ProTeams) {
+                System.out.println(counter + team.name);
+                counter++;
+            }
+            int teamIndex = Integer.parseInt(input.readLine());
+            _allTeams.ProTeams.get(teamIndex - 1).players.add(player);
+        }
+        System.out.println(name + " Added Successfully!");
+    }
+
+    private static ArrayList<String> fillRandomNames() {
+        ArrayList<String> randomList = new ArrayList<>();
+        randomList.add("Kamil Lewandowkski");
+        randomList.add("Hidayet Turkoglu");
+        randomList.add("Bukoyoka Grealish");
+        randomList.add("Erdim Terzic");
+        randomList.add("Marco Wirtz");
+        randomList.add("Sebastian Reus");
+        randomList.add("Micheal Scottish");
+        randomList.add("Kevin Malone");
+        randomList.add("Arda Gulen");
+        randomList.add("Allejandro Domuininguez");
+        randomList.add("Federico Chiesa");
+        randomList.add("Andre Batistuta");
+        randomList.add("Leo Spike Spiegel");
+        randomList.add("Kai Draxler");
+        randomList.add("Alex Alves");
+        randomList.add("Marcelo Coutinho");
+        randomList.add("Roberto Ronaldo");
+        randomList.add("Carlos Souza");
+        randomList.add("Dimitris Papa");
+        randomList.add("Patrick Hjarnic");
+        randomList.add("Bojan Modric");
+        randomList.add("Alberto Barella");
+        randomList.add("Sven Erikson");
+        randomList.add("Peterri Koponnen");
+        randomList.add("Erling Odegaard");
+        return randomList;
     }
 }
