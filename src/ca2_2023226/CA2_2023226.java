@@ -7,6 +7,7 @@ package ca2_2023226;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,14 +47,14 @@ public class CA2_2023226 {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         Scanner _scanner = new Scanner(System.in);
         System.out.println("Enter the File name .txt extention: ");
         String mockFile = _scanner.next();
         AllTeams _allTeams = FillWithMockData(mockFile);
-        String[] AllPlayerList = new String[1000];
         String userInputToSearch;
 
         try ( Scanner scanner = new Scanner(System.in)) {
@@ -70,39 +71,41 @@ public class CA2_2023226 {
                 System.out.println("7. Add Player");
                 System.out.println("8. Generate Random Player");
                 System.out.println("9. Exit");
-                System.out.print("Enter your choice: ");
 
                 // Take user input
-                int userInput = scanner.nextInt();
-                 
+                BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+                System.out.print("Enter your choice please: ");
+                int userInput = Integer.parseInt(input.readLine());
                 // Convert user input to enum
                 choice = getMenuChoice(userInput);
-
+                List<ProfessionalPlayer> allProPlayers = combinePlayers(_allTeams.ProTeams);
+                List<U19Player> u19Players = combineU19Players(_allTeams.u19Teams);
+                List<Staff> allStaff = CombineStaff(_allTeams.ProTeams, _allTeams.u19Teams);
                 // Perform the selected operation
                 switch (choice) {
                     case SORT_PLAYERS:
-                        List<ProfessionalPlayer> allProPlayers = combinePlayers(_allTeams.ProTeams);
-                        List<U19Player> u19Players = combineU19Players(_allTeams.u19Teams);
                         SortPlayers(allProPlayers, u19Players);
                         break;
                     case SORT_TEAMS:
                         SortTeams(_allTeams);
                         break;
                     case SORT_STAFF:
-                        List<Staff> allStaff = CombineStaff(_allTeams.ProTeams, _allTeams.u19Teams);
                         SortStaff(allStaff);
                         break;
                     case SEARCH_PLAYERS_BY_NAME:
-                        System.out.println("\n Please enter the name of the book you wish to find:");
-                        userInputToSearch = _scanner.nextLine();
+                        System.out.println("\n Please enter the name of the player you wish to find:");
+                        userInputToSearch = scanner.nextLine();
+                        SearchPlayers(userInputToSearch, allProPlayers, u19Players);
                         break;
                     case SEARCH_TEAMS_BY_NAME:
-                        System.out.println("Delete contact operation selected.");
-                        // Here would be the code for deleting a contact
+                        System.out.println("\n Please enter the name of the team you wish to find:");
+                        userInputToSearch = scanner.nextLine();
+                        SearchTeam(userInputToSearch, _allTeams);
                         break;
                     case SEARCH_STAFF_BY_NAME:
-                        System.out.println("Delete contact operation selected.");
-                        // Here would be the code for deleting a contact
+                        System.out.println("\n Please enter the name of the team you wish to find:");
+                        userInputToSearch = scanner.nextLine();
+                        SearchStaff(userInputToSearch, allStaff);
                         break;
                     case ADD_PLAYER:
                         System.out.println("Delete contact operation selected.");
@@ -346,6 +349,101 @@ public class CA2_2023226 {
         List<String> staffListNames = quickSort(getStaffNames(allStaff));
         for (String str : staffListNames) {
             System.out.println(str);
+        }
+    }
+
+    /*  After I spent hours to fix it I decided no to go for it. It doesnt work properly.  
+    
+    private static int binarySearch(List<String> list, String x) {
+        int l = 0, r = list.size() - 1;
+
+        // Loop to implement Binary Search 
+        while (l <= r) {
+
+            // Calculating mid 
+            int m = l + (r - l) / 2;
+
+            int res = x.compareTo(list.get(m));
+
+            // Check if x is present at mid 
+            if (res == 0) {
+                return m;
+            }
+
+            // If x is greater, ignore left half 
+            if (res > 0) {
+                l = m + 1;
+            } // If x is smaller, ignore right half 
+            else {
+                r = m - 1;
+            }
+        }
+        return -1;
+    }
+     */
+    private static int linearSearch(List<String> list, String ref) {
+        int n = list.size();
+        int i;
+        for (i = 0; i < n; i++) {
+            if (list.get(i).equalsIgnoreCase(ref)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private static void SearchPlayers(String userInputToSearch, List<ProfessionalPlayer> allProPlayers, List<U19Player> u19Players) {
+        int counter = 0;
+        int indexOfPlayer = linearSearch(getPlayerNames(allProPlayers), userInputToSearch);
+        if (indexOfPlayer != -1) {
+            ProfessionalPlayer player = allProPlayers.get(indexOfPlayer);
+            System.out.println(player.nationality + " international, " + player.name + " has founded. He played " + player.gamesPlayed + " games in his career.");
+            counter++;
+        }
+        indexOfPlayer = linearSearch(getU19PlayerNames(u19Players), userInputToSearch);
+        if (indexOfPlayer != -1) {
+            U19Player player = u19Players.get(indexOfPlayer);
+            System.out.println(player.nationality + " international, " + player.name + " has founded. He has " + player.Contract + " contract type with his team");
+            counter++;
+        }
+        if (counter == 0) {
+            System.out.println("Nobody has founded");
+        }
+    }
+
+    private static void SearchTeam(String userInputToSearch, AllTeams _allTeams) {
+        List<String> proTeamNames = _allTeams.ProTeams.stream()
+                .map(ProfessionalTeam::getName)
+                .collect(Collectors.toList());
+        List<String> u19TeamNames = _allTeams.u19Teams.stream()
+                .map(U19Team::getName)
+                .collect(Collectors.toList());
+        int counter = 0;
+        int indexOfTeam = linearSearch(proTeamNames, userInputToSearch);
+        if (indexOfTeam != -1) {
+            ProfessionalTeam team = _allTeams.ProTeams.get(indexOfTeam);
+            System.out.println(team.name + " from " + team.league + " leauge has founded.");
+            counter++;
+        }
+        int indexOfu19Team = linearSearch(u19TeamNames, userInputToSearch);
+        if (indexOfu19Team != -1) {
+            U19Team u19Team = _allTeams.u19Teams.get(indexOfu19Team);
+            System.out.println(u19Team.name + " from " + u19Team.area + " area has founded.");
+            counter++;
+        }
+        if (counter == 0) {
+            System.out.println("Nobody has founded");
+        }
+
+    }
+
+    private static void SearchStaff(String userInputToSearch, List<Staff> allStaff) {
+        int indexOfPlayer = linearSearch(getStaffNames(allStaff), userInputToSearch);
+        if (indexOfPlayer != -1) {
+            Staff staff = allStaff.get(indexOfPlayer);
+            System.out.println(staff.job + " " + staff.name + " has founded.");
+        } else {
+            System.out.println("Nobody has founded");
         }
     }
 }
