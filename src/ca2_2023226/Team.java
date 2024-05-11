@@ -14,7 +14,9 @@ public abstract class Team {
    public String name;
     public Date founded;
     public String area;
-    
+ public String getName() {
+        return name;
+    }   
 }
 
 

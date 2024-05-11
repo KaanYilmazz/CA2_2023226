@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -21,10 +22,10 @@ import java.util.Scanner;
 enum MenuChoice {
     SORT_PLAYERS,
     SORT_TEAMS,
-    SORT_COACHES,
+    SORT_STAFF,
     SEARCH_PLAYERS_BY_NAME,
     SEARCH_TEAMS_BY_NAME,
-    SEARCH_COACHES_BY_NAME,
+    SEARCH_STAFF_BY_NAME,
     ADD_PLAYER,
     GENERATE_RANDOM_PLAYER,
     EXIT
@@ -53,6 +54,7 @@ public class CA2_2023226 {
         String mockFile = _scanner.next();
         AllTeams _allTeams = FillWithMockData(mockFile);
         String[] AllPlayerList = new String[1000];
+        String userInputToSearch;
 
         try ( Scanner scanner = new Scanner(System.in)) {
             MenuChoice choice;
@@ -61,10 +63,10 @@ public class CA2_2023226 {
                 System.out.println("***** WELCOME TO RUGBY DATABASE *****");
                 System.out.println("1. Sort Players");
                 System.out.println("2. Sort Teams");
-                System.out.println("3. Sort Coaches");
+                System.out.println("3. Sort Staff");
                 System.out.println("4. Search Players by Name");
                 System.out.println("5. Search Teams by Name");
-                System.out.println("6. Search Coaches by Name");
+                System.out.println("6. Search Staff by Name");
                 System.out.println("7. Add Player");
                 System.out.println("8. Generate Random Player");
                 System.out.println("9. Exit");
@@ -72,7 +74,7 @@ public class CA2_2023226 {
 
                 // Take user input
                 int userInput = scanner.nextInt();
-
+                 
                 // Convert user input to enum
                 choice = getMenuChoice(userInput);
 
@@ -80,25 +82,25 @@ public class CA2_2023226 {
                 switch (choice) {
                     case SORT_PLAYERS:
                         List<ProfessionalPlayer> allProPlayers = combinePlayers(_allTeams.ProTeams);
-                        SortPlayers(allProPlayers);
+                        List<U19Player> u19Players = combineU19Players(_allTeams.u19Teams);
+                        SortPlayers(allProPlayers, u19Players);
                         break;
                     case SORT_TEAMS:
-                        System.out.println("Search contact operation selected.");
-                        // Here would be the code for searching a contact
+                        SortTeams(_allTeams);
                         break;
-                    case SORT_COACHES:
-                        System.out.println("Delete contact operation selected.");
-                        // Here would be the code for deleting a contact
+                    case SORT_STAFF:
+                        List<Staff> allStaff = CombineStaff(_allTeams.ProTeams, _allTeams.u19Teams);
+                        SortStaff(allStaff);
                         break;
                     case SEARCH_PLAYERS_BY_NAME:
-                        System.out.println("Delete contact operation selected.");
-                        // Here would be the code for deleting a contact
+                        System.out.println("\n Please enter the name of the book you wish to find:");
+                        userInputToSearch = _scanner.nextLine();
                         break;
                     case SEARCH_TEAMS_BY_NAME:
                         System.out.println("Delete contact operation selected.");
                         // Here would be the code for deleting a contact
                         break;
-                    case SEARCH_COACHES_BY_NAME:
+                    case SEARCH_STAFF_BY_NAME:
                         System.out.println("Delete contact operation selected.");
                         // Here would be the code for deleting a contact
                         break;
@@ -127,13 +129,13 @@ public class CA2_2023226 {
             case 2:
                 return MenuChoice.SORT_TEAMS;
             case 3:
-                return MenuChoice.SORT_COACHES;
+                return MenuChoice.SORT_STAFF;
             case 4:
                 return MenuChoice.SEARCH_PLAYERS_BY_NAME;
             case 5:
                 return MenuChoice.SEARCH_TEAMS_BY_NAME;
             case 6:
-                return MenuChoice.SEARCH_COACHES_BY_NAME;
+                return MenuChoice.SEARCH_STAFF_BY_NAME;
             case 7:
                 return MenuChoice.ADD_PLAYER;
             case 8:
@@ -203,9 +205,9 @@ public class CA2_2023226 {
                         staff.name = parts[1].trim();
                         staff.job = JobEnum.Jobgetter(Integer.parseInt(parts[2].trim()));
                         if (u19TeamCount == 0) { //in my txt file Proteams always come first. I know its very bad coding but I needed to progress so I just made this up
-                            allTeams.ProTeams.get(TeamCount-1).staffList.add(staff); // -1 because of index
+                            allTeams.ProTeams.get(TeamCount - 1).staffList.add(staff); // -1 because of index
                         } else {
-                            allTeams.u19Teams.get(u19TeamCount-1).staffList.add(staff); // -1 because of index
+                            allTeams.u19Teams.get(u19TeamCount - 1).staffList.add(staff); // -1 because of index
                         }
                         break;
                     default:
@@ -220,9 +222,15 @@ public class CA2_2023226 {
         return allTeams;
     }
 
-    private static void SortPlayers(List<ProfessionalPlayer> proplayerlist) {
+    private static void SortPlayers(List<ProfessionalPlayer> proplayerlist, List<U19Player> u19playerlist) {
+        System.out.println("Professional Players List by Name\n");
         List<String> playerListNames = quickSort(getPlayerNames(proplayerlist));
         for (String str : playerListNames) {
+            System.out.println(str);
+        }
+        System.out.println("\n U19 Players List by Name\n");
+        List<String> U19playerListNames = quickSort(getU19PlayerNames(u19playerlist));
+        for (String str : U19playerListNames) {
             System.out.println(str);
         }
     }
@@ -269,12 +277,75 @@ public class CA2_2023226 {
         return playerNames;
     }
 
-    private static List<ProfessionalPlayer> combinePlayers(ArrayList<ProfessionalTeam> ProTeams) {
+    private static List<ProfessionalPlayer> combinePlayers(ArrayList<ProfessionalTeam> Teams) {
         List<ProfessionalPlayer> allPlayers = new ArrayList<>();
-        for (ProfessionalTeam team : ProTeams) {
+        for (ProfessionalTeam team : Teams) {
             allPlayers.addAll(team.players);
         }
         return allPlayers;
     }
 
+    public static List<String> getU19PlayerNames(List<U19Player> players) {
+        List<String> playerNames = new ArrayList<>();
+        for (Player player : players) {
+            playerNames.add(player.name);
+        }
+        return playerNames;
+    }
+
+    private static List<U19Player> combineU19Players(ArrayList<U19Team> Teams) {
+        List<U19Player> allPlayers = new ArrayList<>();
+        for (U19Team team : Teams) {
+            allPlayers.addAll(team.players);
+        }
+        return allPlayers;
+    }
+
+    private static void SortTeams(AllTeams _allTeams) {
+        List<String> proTeamNames = _allTeams.ProTeams.stream()
+                .map(ProfessionalTeam::getName)
+                .collect(Collectors.toList());
+        List<String> u19TeamNames = _allTeams.u19Teams.stream()
+                .map(U19Team::getName)
+                .collect(Collectors.toList());
+
+        System.out.println("Professional Team List by Name\n");
+        List<String> TeamsSorted = quickSort(proTeamNames);
+        for (String str : TeamsSorted) {
+            System.out.println(str);
+        }
+        System.out.println("\n U19 Team List by Name\n");
+        List<String> u19TeamsSorted = quickSort(u19TeamNames);
+        for (String str : u19TeamsSorted) {
+            System.out.println(str);
+        }
+
+    }
+
+    private static List<Staff> CombineStaff(ArrayList<ProfessionalTeam> ProTeams, ArrayList<U19Team> u19Teams) {
+        List<Staff> AllStaff = new ArrayList<>();
+        for (ProfessionalTeam team : ProTeams) {
+            AllStaff.addAll(team.staffList);
+        }
+        for (U19Team team : u19Teams) {
+            AllStaff.addAll(team.staffList);
+        }
+        return AllStaff;
+    }
+
+    public static List<String> getStaffNames(List<Staff> staffList) {
+        List<String> staffNames = new ArrayList<>();
+        for (Staff staff : staffList) {
+            staffNames.add(staff.name);
+        }
+        return staffNames;
+    }
+
+    private static void SortStaff(List<Staff> allStaff) {
+        System.out.println("Staff List by Name\n");
+        List<String> staffListNames = quickSort(getStaffNames(allStaff));
+        for (String str : staffListNames) {
+            System.out.println(str);
+        }
+    }
 }
